@@ -1,0 +1,173 @@
+<svg viewBox="0 0 1600 1200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #2c3e50; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; fill: #e74c3c; }
+      .text { font-family: Arial, sans-serif; font-size: 14px; fill: #2c3e50; }
+      .small-text { font-family: Arial, sans-serif; font-size: 12px; fill: #34495e; }
+      .component-text { font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; fill: white; text-anchor: middle; }
+      .servlet-container { fill: #3498db; stroke: #2980b9; stroke-width: 2; opacity: 0.9; }
+      .spring-container { fill: #27ae60; stroke: #229954; stroke-width: 2; opacity: 0.9; }
+      .delegating-filter { fill: #e74c3c; stroke: #c0392b; stroke-width: 3; }
+      .filter-chain-proxy { fill: #f39c12; stroke: #e67e22; stroke-width: 3; }
+      .security-filter { fill: #9b59b6; stroke: #8e44ad; stroke-width: 2; }
+      .normal-filter { fill: #95a5a6; stroke: #7f8c8d; stroke-width: 2; }
+      .arrow { stroke: #e74c3c; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+      .spring-arrow { stroke: #27ae60; stroke-width: 3; fill: none; marker-end: url(#springarrow); }
+      .highlight-box { fill: none; stroke: #e74c3c; stroke-width: 4; stroke-dasharray: 5,5; }
+      .explanation-box { fill: #ecf0f1; stroke: #bdc3c7; stroke-width: 2; }
+      .key-box { fill: #fff3cd; stroke: #f39c12; stroke-width: 2; }
+    </style>
+    <marker id="arrowhead" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#e74c3c" />
+    </marker>
+    <marker id="springarrow" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#27ae60" />
+    </marker>
+  </defs>
+  
+  <!-- 제목 -->
+  <text x="800" y="30" text-anchor="middle" class="title">Spring Security Filter Chain 구조</text>
+  <text x="800" y="55" text-anchor="middle" class="subtitle">DelegatingFilterProxy ↔ FilterChainProxy 연결 원리</text>
+  
+  <!-- Servlet Container 영역 -->
+  <rect x="50" y="100" width="300" height="600" rx="15" class="servlet-container"/>
+  <text x="200" y="125" text-anchor="middle" class="component-text">Servlet Container (Tomcat)</text>
+  
+  <!-- 일반 필터들 -->
+  <rect x="80" y="150" width="240" height="40" rx="5" class="normal-filter"/>
+  <text x="200" y="175" class="component-text">Character Encoding Filter</text>
+  
+  <rect x="80" y="210" width="240" height="40" rx="5" class="normal-filter"/>
+  <text x="200" y="235" class="component-text">CORS Filter</text>
+  
+  <rect x="80" y="270" width="240" height="40" rx="5" class="normal-filter"/>
+  <text x="200" y="295" class="component-text">Logging Filter</text>
+  
+  <!-- DelegatingFilterProxy (강조) -->
+  <rect x="80" y="350" width="240" height="80" rx="5" class="delegating-filter"/>
+  <rect x="75" y="345" width="250" height="90" rx="8" class="highlight-box"/>
+  <text x="200" y="375" class="component-text">DelegatingFilterProxy</text>
+  <text x="200" y="395" class="component-text" font-size="12">(Spring Security)</text>
+  <text x="200" y="415" class="component-text" font-size="11">Bean Name: springSecurityFilterChain</text>
+  
+  <!-- 추가 일반 필터들 -->
+  <rect x="80" y="470" width="240" height="40" rx="5" class="normal-filter"/>
+  <text x="200" y="495" class="component-text">Other Filters</text>
+  
+  <rect x="80" y="530" width="240" height="40" rx="5" class="normal-filter"/>
+  <text x="200" y="555" class="component-text">Additional Filters</text>
+  
+  <rect x="80" y="590" width="240" height="40" rx="5" class="normal-filter"/>
+  <text x="200" y="615" class="component-text">DispatcherServlet</text>
+  
+  <!-- Spring Container 영역 -->
+  <rect x="450" y="100" width="350" height="600" rx="15" class="spring-container"/>
+  <text x="625" y="125" text-anchor="middle" class="component-text">Spring Container</text>
+  
+  <!-- FilterChainProxy (강조) -->
+  <rect x="480" y="150" width="290" height="80" rx="5" class="filter-chain-proxy"/>
+  <rect x="475" y="145" width="300" height="90" rx="8" class="highlight-box"/>
+  <text x="625" y="175" class="component-text">FilterChainProxy</text>
+  <text x="625" y="195" class="component-text" font-size="12">(springSecurityFilterChain Bean)</text>
+  <text x="625" y="215" class="component-text" font-size="11">실제 Spring Security Filter Chain 관리</text>
+  
+  <!-- Spring Security Filters -->
+  <text x="625" y="270" text-anchor="middle" class="subtitle" font-size="16">Spring Security Filter Chain</text>
+  
+  <!-- 보안 필터들 -->
+  <rect x="480" y="290" width="290" height="35" rx="3" class="security-filter"/>
+  <text x="625" y="312" class="component-text" font-size="12">SecurityContextPersistenceFilter</text>
+  
+  <rect x="480" y="335" width="290" height="35" rx="3" class="security-filter"/>
+  <text x="625" y="357" class="component-text" font-size="12">LogoutFilter</text>
+  
+  <rect x="480" y="380" width="290" height="35" rx="3" class="security-filter"/>
+  <text x="625" y="402" class="component-text" font-size="12">UsernamePasswordAuthenticationFilter</text>
+  
+  <rect x="480" y="425" width="290" height="35" rx="3" class="security-filter"/>
+  <text x="625" y="447" class="component-text" font-size="12">SessionManagementFilter</text>
+  
+  <rect x="480" y="470" width="290" height="35" rx="3" class="security-filter"/>
+  <text x="625" y="492" class="component-text" font-size="12">ExceptionTranslationFilter</text>
+  
+  <rect x="480" y="515" width="290" height="35" rx="3" class="security-filter"/>
+  <text x="625" y="537" class="component-text" font-size="12">FilterSecurityInterceptor</text>
+  
+  <rect x="480" y="560" width="290" height="35" rx="3" class="security-filter"/>
+  <text x="625" y="582" class="component-text" font-size="12">AuthorizationFilter</text>
+  
+  <!-- 화살표들 -->
+  <!-- 일반 필터 체인 (세로) -->
+  <path d="M 200 190 L 200 200" class="arrow"/>
+  <path d="M 200 250 L 200 260" class="arrow"/>
+  <path d="M 200 310 L 200 340" class="arrow"/>
+  
+  <!-- DelegatingFilterProxy에서 Spring으로 (가로) -->
+  <path d="M 320 390 L 470 390 L 470 190 L 480 190" class="spring-arrow"/>
+  
+  <!-- FilterChainProxy 내부 필터 체인 (세로) -->
+  <path d="M 625 235 L 625 280" class="arrow"/>
+  <path d="M 625 325 L 625 325" class="arrow"/>
+  <path d="M 625 370 L 625 370" class="arrow"/>
+  <path d="M 625 415 L 625 415" class="arrow"/>
+  <path d="M 625 460 L 625 460" class="arrow"/>
+  <path d="M 625 505 L 625 505" class="arrow"/>
+  <path d="M 625 550 L 625 550" class="arrow"/>
+  
+  <!-- Spring에서 다시 돌아오는 화살표 -->
+  <path d="M 780 190 L 850 190 L 850 390 L 320 390 L 320 460 L 200 460" class="spring-arrow"/>
+  
+  <!-- 계속되는 필터 체인 (세로) -->
+  <path d="M 200 510 L 200 520" class="arrow"/>
+  <path d="M 200 570 L 200 580" class="arrow"/>
+  
+  <!-- 설명 박스 1 - DelegatingFilterProxy -->
+  <rect x="900" y="150" width="650" height="150" rx="10" class="explanation-box"/>
+  <text x="920" y="180" class="subtitle" font-size="16">🔍 DelegatingFilterProxy의 역할</text>
+  <text x="920" y="210" class="text">1. Servlet Container의 표준 Filter로 동작</text>
+  <text x="920" y="235" class="text">2. 실제 필터링 작업을 Spring Bean에게 위임</text>
+  <text x="920" y="260" class="text">3. "springSecurityFilterChain" 이름의 Bean을 찾아서 호출</text>
+  <text x="920" y="285" class="text">4. Servlet Container와 Spring Container를 연결하는 브릿지 역할</text>
+  
+  <!-- 설명 박스 2 - FilterChainProxy -->
+  <rect x="900" y="320" width="650" height="150" rx="10" class="explanation-box"/>
+  <text x="920" y="350" class="subtitle" font-size="16">🔍 FilterChainProxy의 역할</text>
+  <text x="920" y="380" class="text">1. Spring Bean으로 등록된 실제 보안 필터 체인</text>
+  <text x="920" y="405" class="text">2. 여러 개의 Spring Security Filter들을 순서대로 관리</text>
+  <text x="920" y="430" class="text">3. URL 패턴별로 다른 필터 체인 적용 가능</text>
+  <text x="920" y="455" class="text">4. Spring의 DI/AOP/라이프사이클 기능 활용 가능</text>
+  
+  <!-- 핵심 포인트 박스 -->
+  <rect x="50" y="750" width="1500" height="200" rx="10" class="key-box"/>
+  <text x="800" y="780" text-anchor="middle" class="subtitle" font-size="18">💡 면접에서 자주 묻는 질문과 답변</text>
+  
+  <text x="70" y="810" class="text" font-weight="bold">Q1: DelegatingFilterProxy가 왜 필요한가요?</text>
+  <text x="90" y="835" class="text">A: Servlet Filter는 Servlet Container에서 관리되고, Spring Bean은 Spring Container에서 관리됩니다.</text>
+  <text x="110" y="855" class="text">DelegatingFilterProxy는 이 두 컨테이너를 연결하여 Spring의 강력한 기능을 Servlet Filter에서 사용할 수 있게 합니다.</text>
+  
+  <text x="70" y="885" class="text" font-weight="bold">Q2: FilterChainProxy의 장점은 무엇인가요?</text>
+  <text x="90" y="910" class="text">A: ① Spring Bean의 모든 장점 활용 (DI, AOP, 라이프사이클 관리)</text>
+  <text x="110" y="930" class="text">② URL 패턴별로 다른 보안 정책 적용 가능  ③ 조건부 필터 체인 구성 가능</text>
+  
+  <!-- 프로세스 번호 표시 -->
+  <circle cx="380" cy="200" r="20" fill="#e74c3c"/>
+  <text x="380" y="208" text-anchor="middle" fill="white" font-weight="bold" font-size="16">1</text>
+  
+  <circle cx="380" cy="390" r="20" fill="#27ae60"/>
+  <text x="380" y="398" text-anchor="middle" fill="white" font-weight="bold" font-size="16">2</text>
+  
+  <circle cx="380" cy="580" r="20" fill="#e74c3c"/>
+  <text x="380" y="588" text-anchor="middle" fill="white" font-weight="bold" font-size="16">3</text>
+  
+  <!-- 프로세스 설명 -->
+  <text x="50" y="980" class="subtitle" font-size="16">🔄 처리 과정:</text>
+  <text x="50" y="1005" class="text">① 요청이 일반 Servlet Filter들을 순차적으로 거쳐 DelegatingFilterProxy에 도달</text>
+  <text x="50" y="1025" class="text">② DelegatingFilterProxy가 Spring Container의 FilterChainProxy Bean에게 처리를 위임</text>
+  <text x="50" y="1045" class="text">③ FilterChainProxy가 Spring Security Filter Chain을 순서대로 실행하여 보안 검사 수행</text>
+  <text x="50" y="1065" class="text">④ 보안 검사 완료 후 다시 Servlet Filter Chain으로 돌아가서 나머지 필터들 처리</text>
+  
+  <!-- 코드 예시 힌트 -->
+  <text x="50" y="1100" class="small-text" font-style="italic">💻 실제 코드에서는 @EnableWebSecurity 어노테이션 하나로 이 전체 구조가 자동 설정됩니다.</text>
+  <text x="50" y="1120" class="small-text" font-style="italic">📝 web.xml에서 DelegatingFilterProxy 등록 또는 Spring Boot에서 자동 등록</text>
+</svg>
