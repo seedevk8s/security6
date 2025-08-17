@@ -1,0 +1,261 @@
+<svg viewBox="0 0 1800 1400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 26px; font-weight: bold; fill: #2c3e50; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; fill: #e74c3c; }
+      .text { font-family: Arial, sans-serif; font-size: 14px; fill: #2c3e50; }
+      .small-text { font-family: Arial, sans-serif; font-size: 12px; fill: #34495e; }
+      .component-text { font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; fill: white; text-anchor: middle; }
+      .auth-text { font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; fill: white; text-anchor: middle; }
+      
+      /* 컨테이너 스타일 */
+      .was-container { fill: #2980b9; stroke: #1f4e79; stroke-width: 3; opacity: 0.9; }
+      .web-container { fill: #8e44ad; stroke: #6c3483; stroke-width: 3; opacity: 0.9; }
+      .spring-container { fill: #27ae60; stroke: #1e8449; stroke-width: 3; opacity: 0.9; }
+      
+      /* 컴포넌트 스타일 */
+      .delegating-filter { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; }
+      .security-filter-chain { fill: #f39c12; stroke: #e67e22; stroke-width: 2; }
+      .auth-filter { fill: #9b59b6; stroke: #7d3c98; stroke-width: 2; }
+      .auth-manager { fill: #16a085; stroke: #138d75; stroke-width: 2; }
+      .auth-provider { fill: #2e86ab; stroke: #21618c; stroke-width: 2; }
+      .user-service { fill: #d35400; stroke: #a04000; stroke-width: 2; }
+      .database { fill: #34495e; stroke: #2c3e50; stroke-width: 2; }
+      
+      /* 화살표 스타일 */
+      .auth-arrow { stroke: #e74c3c; stroke-width: 4; fill: none; marker-end: url(#auth-arrowhead); }
+      .flow-arrow { stroke: #27ae60; stroke-width: 3; fill: none; marker-end: url(#flow-arrowhead); }
+      .return-arrow { stroke: #3498db; stroke-width: 3; fill: none; marker-end: url(#return-arrowhead); stroke-dasharray: 5,5; }
+      
+      .highlight-box { fill: none; stroke: #e74c3c; stroke-width: 4; stroke-dasharray: 8,5; }
+      .explanation-box { fill: #ecf0f1; stroke: #bdc3c7; stroke-width: 2; }
+    </style>
+    
+    <marker id="auth-arrowhead" markerWidth="15" markerHeight="10" refX="14" refY="5" orient="auto">
+      <polygon points="0 0, 15 5, 0 10" fill="#e74c3c" />
+    </marker>
+    <marker id="flow-arrowhead" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#27ae60" />
+    </marker>
+    <marker id="return-arrowhead" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#3498db" />
+    </marker>
+  </defs>
+  
+  <!-- 제목 -->
+  <text x="900" y="35" text-anchor="middle" class="title">Spring Security 인증 작업 전체 구조</text>
+  <text x="900" y="65" text-anchor="middle" class="subtitle">WAS(Tomcat) → Web Container → Spring Container 인증 플로우</text>
+  
+  <!-- WAS (Tomcat) 영역 -->
+  <rect x="50" y="100" width="500" height="250" rx="15" class="was-container"/>
+  <text x="300" y="130" text-anchor="middle" class="component-text" font-size="18">WAS (Tomcat Container)</text>
+  
+  <!-- HTTP Request -->
+  <rect x="80" y="160" width="150" height="50" rx="8" fill="#34495e" stroke="#2c3e50" stroke-width="2"/>
+  <text x="155" y="180" class="component-text" font-size="14">HTTP Request</text>
+  <text x="155" y="195" class="component-text" font-size="12">로그인 요청</text>
+  
+  <!-- Web Container 영역 -->
+  <rect x="280" y="160" width="250" height="170" rx="10" class="web-container"/>
+  <text x="405" y="185" text-anchor="middle" class="component-text" font-size="16">Web Container</text>
+  
+  <!-- DelegatingFilterProxy -->
+  <rect x="300" y="200" width="210" height="60" rx="8" class="delegating-filter"/>
+  <rect x="295" y="195" width="220" height="70" rx="10" class="highlight-box"/>
+  <text x="405" y="220" class="component-text">DelegatingFilterProxy</text>
+  <text x="405" y="235" class="component-text" font-size="11">Servlet Container에서 동작</text>
+  <text x="405" y="250" class="component-text" font-size="11">Spring Bean 위임</text>
+  
+  <!-- 일반 Servlet Filters -->
+  <rect x="300" y="280" width="100" height="30" rx="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="2"/>
+  <text x="350" y="300" class="auth-text">기타 Filter</text>
+  
+  <rect x="410" y="280" width="100" height="30" rx="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="2"/>
+  <text x="460" y="300" class="auth-text">Servlet</text>
+  
+  <!-- Spring Container 영역 -->
+  <rect x="600" y="100" width="1150" height="700" rx="15" class="spring-container"/>
+  <text x="1175" y="130" text-anchor="middle" class="component-text" font-size="18">Spring Container</text>
+  
+  <!-- SecurityFilterChain -->
+  <rect x="650" y="160" width="300" height="80" rx="10" class="security-filter-chain"/>
+  <rect x="645" y="155" width="310" height="90" rx="12" class="highlight-box"/>
+  <text x="800" y="185" class="component-text" font-size="16">SecurityFilterChain</text>
+  <text x="800" y="205" class="component-text" font-size="12">(FilterChainProxy)</text>
+  <text x="800" y="220" class="component-text" font-size="11">Spring Security Filter들 관리</text>
+  
+  <!-- Authentication Filters -->
+  <text x="800" y="280" text-anchor="middle" class="subtitle" font-size="16">🔐 인증 관련 필터들</text>
+  
+  <rect x="650" y="300" width="300" height="40" rx="5" class="auth-filter"/>
+  <text x="800" y="325" class="component-text">UsernamePasswordAuthenticationFilter</text>
+  
+  <rect x="650" y="350" width="300" height="40" rx="5" class="auth-filter"/>
+  <text x="800" y="375" class="component-text">BasicAuthenticationFilter</text>
+  
+  <rect x="650" y="400" width="300" height="40" rx="5" class="auth-filter"/>
+  <text x="800" y="425" class="component-text">JwtAuthenticationFilter</text>
+  
+  <!-- Authentication Manager -->
+  <rect x="1000" y="300" width="200" height="60" rx="8" class="auth-manager"/>
+  <text x="1100" y="320" class="component-text">Authentication</text>
+  <text x="1100" y="335" class="component-text">Manager</text>
+  <text x="1100" y="350" class="component-text" font-size="11">인증 처리 총괄</text>
+  
+  <!-- Authentication Provider -->
+  <rect x="1250" y="200" width="180" height="60" rx="8" class="auth-provider"/>
+  <text x="1340" y="220" class="component-text">Authentication</text>
+  <text x="1340" y="235" class="component-text">Provider</text>
+  <text x="1340" y="250" class="component-text" font-size="11">실제 인증 로직</text>
+  
+  <!-- UserDetailsService -->
+  <rect x="1250" y="300" width="180" height="60" rx="8" class="user-service"/>
+  <text x="1340" y="320" class="component-text">UserDetailsService</text>
+  <text x="1340" y="335" class="component-text" font-size="11">사용자 정보 조회</text>
+  <text x="1340" y="350" class="component-text" font-size="11">loadUserByUsername</text>
+  
+  <!-- PasswordEncoder -->
+  <rect x="1250" y="400" width="180" height="60" rx="8" class="auth-provider"/>
+  <text x="1340" y="420" class="component-text">PasswordEncoder</text>
+  <text x="1340" y="435" class="component-text" font-size="11">비밀번호 암호화</text>
+  <text x="1340" y="450" class="component-text" font-size="11">BCrypt, SHA 등</text>
+  
+  <!-- Database -->
+  <rect x="1480" y="300" width="150" height="60" rx="8" class="database"/>
+  <text x="1555" y="320" class="component-text">Database</text>
+  <text x="1555" y="335" class="component-text" font-size="11">사용자 정보</text>
+  <text x="1555" y="350" class="component-text" font-size="11">권한 정보</text>
+  
+  <!-- SecurityContext -->
+  <rect x="1000" y="500" width="200" height="60" rx="8" class="auth-manager"/>
+  <text x="1100" y="520" class="component-text">SecurityContext</text>
+  <text x="1100" y="535" class="component-text" font-size="11">인증 정보 저장</text>
+  <text x="1100" y="550" class="component-text" font-size="11">SecurityContextHolder</text>
+  
+  <!-- Session -->
+  <rect x="1250" y="500" width="180" height="60" rx="8" class="user-service"/>
+  <text x="1340" y="520" class="component-text">HTTP Session</text>
+  <text x="1340" y="535" class="component-text" font-size="11">세션 기반 인증</text>
+  <text x="1340" y="550" class="component-text" font-size="11">JSESSIONID</text>
+  
+  <!-- 인증 플로우 화살표들 -->
+  
+  <!-- 1. HTTP 요청 -->
+  <path d="M 230 185 L 270 185 L 270 230 L 290 230" class="flow-arrow"/>
+  
+  <!-- 2. DelegatingFilterProxy → SecurityFilterChain -->
+  <path d="M 520 230 L 570 230 L 570 200 L 640 200" class="flow-arrow"/>
+  
+  <!-- 3. SecurityFilterChain → Authentication Filter -->
+  <path d="M 800 240 L 800 290" class="flow-arrow"/>
+  
+  <!-- 4. Authentication Filter → Authentication Manager -->
+  <path d="M 950 320 L 990 320" class="auth-arrow"/>
+  
+  <!-- 5. Authentication Manager → Authentication Provider -->
+  <path d="M 1200 320 L 1200 230 L 1240 230" class="auth-arrow"/>
+  
+  <!-- 6. Authentication Provider → UserDetailsService -->
+  <path d="M 1340 260 L 1340 290" class="auth-arrow"/>
+  
+  <!-- 7. UserDetailsService → Database -->
+  <path d="M 1430 330 L 1470 330" class="auth-arrow"/>
+  
+  <!-- 8. Authentication Provider → PasswordEncoder -->
+  <path d="M 1340 260 L 1340 280 L 1400 280 L 1400 390 L 1340 390" class="auth-arrow"/>
+  
+  <!-- 9. 인증 성공 후 SecurityContext 저장 -->
+  <path d="M 1100 360 L 1100 490" class="return-arrow"/>
+  
+  <!-- 10. SecurityContext → Session -->
+  <path d="M 1200 530 L 1240 530" class="return-arrow"/>
+  
+  <!-- 11. 응답 반환 -->
+  <path d="M 640 200 L 580 200 L 580 400 L 300 400 L 300 370 L 155 370 L 155 250" class="return-arrow"/>
+  
+  <!-- 단계 번호 표시 -->
+  <g id="step-numbers">
+    <circle cx="250" cy="185" r="15" fill="#e74c3c"/>
+    <text x="250" y="190" text-anchor="middle" fill="white" font-weight="bold">1</text>
+    
+    <circle cx="580" cy="200" r="15" fill="#e74c3c"/>
+    <text x="580" y="205" text-anchor="middle" fill="white" font-weight="bold">2</text>
+    
+    <circle cx="970" cy="320" r="15" fill="#e74c3c"/>
+    <text x="970" y="325" text-anchor="middle" fill="white" font-weight="bold">3</text>
+    
+    <circle cx="1220" cy="230" r="15" fill="#e74c3c"/>
+    <text x="1220" y="235" text-anchor="middle" fill="white" font-weight="bold">4</text>
+    
+    <circle cx="1450" cy="330" r="15" fill="#e74c3c"/>
+    <text x="1450" y="335" text-anchor="middle" fill="white" font-weight="bold">5</text>
+    
+    <circle cx="1100" cy="470" r="15" fill="#3498db"/>
+    <text x="1100" y="475" text-anchor="middle" fill="white" font-weight="bold">6</text>
+  </g>
+  
+  <!-- 인증 과정 설명 -->
+  <rect x="50" y="400" width="500" height="380" rx="10" class="explanation-box"/>
+  <text x="70" y="430" class="subtitle" font-size="16">🔐 인증 처리 과정</text>
+  
+  <text x="70" y="460" class="text" font-weight="bold">1단계: HTTP 요청 수신</text>
+  <text x="90" y="480" class="text">• 사용자가 로그인 폼에서 ID/PW 입력</text>
+  <text x="90" y="500" class="text">• WAS(Tomcat)가 HTTP 요청 수신</text>
+  
+  <text x="70" y="530" class="text" font-weight="bold">2단계: Filter Chain 진입</text>
+  <text x="90" y="550" class="text">• DelegatingFilterProxy가 요청 수신</text>
+  <text x="90" y="570" class="text">• Spring의 SecurityFilterChain으로 위임</text>
+  
+  <text x="70" y="600" class="text" font-weight="bold">3단계: 인증 필터 처리</text>
+  <text x="90" y="620" class="text">• UsernamePasswordAuthenticationFilter 동작</text>
+  <text x="90" y="640" class="text">• 사용자 자격증명 추출 및 토큰 생성</text>
+  
+  <text x="70" y="670" class="text" font-weight="bold">4단계: 인증 매니저 처리</text>
+  <text x="90" y="690" class="text">• AuthenticationManager가 처리 총괄</text>
+  <text x="90" y="710" class="text">• 적절한 AuthenticationProvider 선택</text>
+  
+  <text x="70" y="740" class="text" font-weight="bold">5단계: 실제 인증 검증</text>
+  <text x="90" y="760" class="text">• UserDetailsService로 사용자 정보 조회</text>
+  <text x="90" y="780" class="text">• PasswordEncoder로 비밀번호 검증</text>
+  
+  <!-- 인증 결과 처리 -->
+  <rect x="600" y="650" width="550" height="120" rx="10" class="explanation-box"/>
+  <text x="620" y="680" class="subtitle" font-size="16">✅ 인증 성공 시 처리</text>
+  
+  <text x="620" y="710" class="text">• Authentication 객체 생성 (사용자 정보 + 권한)</text>
+  <text x="620" y="730" class="text">• SecurityContext에 인증 정보 저장</text>
+  <text x="620" y="750" class="text">• HTTP Session에 SecurityContext 저장 (세션 기반)</text>
+  
+  <!-- 면접 포인트 -->
+  <rect x="50" y="820" width="1700" height="280" rx="10" fill="#fff3cd" stroke="#f39c12" stroke-width="2"/>
+  <text x="900" y="850" text-anchor="middle" class="subtitle" font-size="18">💡 면접에서 자주 묻는 질문들</text>
+  
+  <text x="70" y="880" class="text" font-weight="bold">Q1: DelegatingFilterProxy의 역할은?</text>
+  <text x="90" y="900" class="text">A: Servlet Container의 Filter와 Spring Container의 Bean을 연결하는 브릿지 역할</text>
+  
+  <text x="70" y="930" class="text" font-weight="bold">Q2: SecurityFilterChain과 AuthenticationManager의 관계는?</text>
+  <text x="90" y="950" class="text">A: SecurityFilterChain이 인증 필터들을 관리하고, 각 필터가 AuthenticationManager를 통해 실제 인증 처리</text>
+  
+  <text x="70" y="980" class="text" font-weight="bold">Q3: 인증 정보는 어디에 저장되나요?</text>
+  <text x="90" y="1000" class="text">A: SecurityContext에 저장되고, 이는 SecurityContextHolder를 통해 접근. 세션 기반에서는 HTTP Session에 저장</text>
+  
+  <text x="70" y="1030" class="text" font-weight="bold">Q4: AuthenticationProvider와 UserDetailsService의 차이는?</text>
+  <text x="90" y="1050" class="text">A: AuthenticationProvider는 인증 로직 구현, UserDetailsService는 사용자 정보 조회만 담당</text>
+  
+  <text x="70" y="1080" class="text" font-weight="bold">Q5: PasswordEncoder의 역할은?</text>
+  <text x="90" y="1100" class="text">A: 비밀번호 암호화/복호화. 보통 BCrypt, SHA256 등 단방향 해시 알고리즘 사용</text>
+  
+  <!-- 구조 요약 -->
+  <rect x="1200" y="650" width="550" height="120" rx="10" class="explanation-box"/>
+  <text x="1220" y="680" class="subtitle" font-size="16">🏗️ 전체 구조 요약</text>
+  
+  <text x="1220" y="710" class="text">• WAS → Web Container → Spring Container 순서</text>
+  <text x="1220" y="730" class="text">• Filter Chain → Authentication → Authorization</text>
+  <text x="1220" y="750" class="text">• 각 계층별 명확한 책임 분리</text>
+  
+  <!-- 기술 스택 정보 -->
+  <text x="50" y="1140" class="small-text" font-style="italic">💻 주요 기술: Spring Security, Servlet API, HTTP Session, BCrypt, JPA/MyBatis</text>
+  <text x="50" y="1160" class="small-text" font-style="italic">🔧 설정: @EnableWebSecurity, SecurityConfig, WebSecurityConfigurerAdapter (구버전)</text>
+  <text x="50" y="1180" class="small-text" font-style="italic">📚 최신: SecurityFilterChain Bean 방식 (Spring Security 5.7+)</text>
+  
+</svg>
